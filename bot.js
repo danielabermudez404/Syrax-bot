@@ -4,12 +4,22 @@ if (!util.log) {
         console.log(new Date().toISOString() + ' - ' + msg);
     };
 }
+
+const tls = require('tls');
+const origConnect = tls.connect;
+tls.connect = function(options, cb) {
+    if (options && typeof options === 'object') {
+        options.rejectUnauthorized = false;
+        options.servername = 'irc.chatzona.org';
+    }
+    return origConnect.apply(this, arguments);
+};
+
 const irc = require('irc');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Servidor Express para mantener vivo el bot en Render con UptimeRobot
 app.get('/', (req, res) => {
     res.send('Syrax_ bot está activo y funcionando!');
 });
@@ -18,16 +28,11 @@ app.listen(PORT, () => {
     console.log(`Servidor web corriendo en el puerto ${PORT}`);
 });
 
-// Configuración de la conexión de Syrax_ a la red de IRC
 const client = new irc.Client('irc.chatzona.org', 'Syrax_', {
     userName: 'Syrax',
     realName: 'Syrax Bot de Juegos',
     port: 6697,
     secure: true,
-    selfSigned: true,
-    certExpired: true,
-    rejectUnauthorized: false,
-    servername: 'irc.chatzona.org',
     channels: [],
     autoRejoin: true,
     autoConnect: true
