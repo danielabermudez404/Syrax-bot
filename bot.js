@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 });
 
 // Configuración de la conexión de Syrax_ a la red de IRC
-const client = new irc.Client('irc.chatzona.org', 'Syrax_', {
+const client = new irc.Client('fresa.chatzona.org', 'Syrax_', {
     userName: 'Syrax',
     realName: 'Syrax Bot de Juegos',
     port: 6667,
@@ -39,13 +39,19 @@ let anuncioTimer = null;
 
 // Evento cuando se conecta al servidor
 client.addListener('registered', function(message) {
-    console.log('Syrax_ conectado al servidor. Entrando a la sala...');
+    console.log('Syrax_ conectado al servidor. Autenticando con NickServ...');
+    
+    // 1. Nos identificamos con la cuenta principal que tiene la contraseña
+    client.say('NickServ', 'IDENTIFY Universo_Latino universo');
+
+    // 2. Esperamos un par de segundos a que NickServ lo acepte y entramos al canal
     setTimeout(() => {
         client.join('#universo_latino', function() {
-            console.log('¡Syrax_ ha entrado formalmente a #universo_latino!');
+            console.log('¡Syrax_ entró a la sala con éxito!');
         });
     }, 4000);
 });
+
 
 // Evento cuando Syrax_ entra a un canal
 client.addListener('join#universo_latino', function(nick, message) {
