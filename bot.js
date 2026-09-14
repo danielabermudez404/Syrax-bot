@@ -14,7 +14,6 @@ app.listen(PORT, () => {
 
 // Configuración de la conexión de Syrax_ a la red de IRC
 const client = new irc.Client('irc.chatzona.org', 'Syrax_', {
-    channels: ['#universo_latino'],
     userName: 'Syrax',
     realName: 'Syrax Bot de Juegos',
     port: 6667,
