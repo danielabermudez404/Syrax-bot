@@ -1,3 +1,9 @@
+const util = require('util');
+if (!util.log) {
+    util.log = function(msg) {
+        console.log(new Date().toISOString() + ' - ' + msg);
+    };
+}
 const irc = require('irc');
 const express = require('express');
 const app = express();
