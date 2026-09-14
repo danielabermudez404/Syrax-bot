@@ -15,10 +15,12 @@ const BOT_PASS = 'universo';
 const CHANNEL = '#universo_latino';
 
 client.connect(PORT_IRC, HOST, () => {
-    console.log('Conectado a TCP 6667');
+    console.log('Conectado a irc.chatzona.org:6667');
     client.write(`NICK ${BOT_NICK}\r\n`);
     client.write(`USER ${BOT_NICK} 8 * :Bot Universo Latino\r\n`);
 });
+
+let identified = false;
 
 client.on('data', (data) => {
     const text = data.toString();
@@ -30,20 +32,26 @@ client.on('data', (data) => {
             client.write(`PONG ${line.split(' ')[1]}\r\n`);
         }
         
-        // Detecta aviso de NickServ o registro al entrar
-        if (line.includes(' 001 ') || line.includes('identificado') || line.includes('REGISTRA') || line.includes('IDENTIFY')) {
+        // Al recibir 001 (bienvenida) o aviso de nick protegido
+        if ((line.includes(' 001 ') || line.includes('registrado y protegido')) && !identified) {
+            identified = true;
             setTimeout(() => {
                 console.log('Enviando IDENTIFY a NickServ...');
                 client.write(`PRIVMSG NickServ :IDENTIFY ${BOT_PASS}\r\n`);
-            }, 1000);
+            }, 600);
 
             setTimeout(() => {
                 console.log(`Uniéndome a ${CHANNEL}...`);
                 client.write(`JOIN ${CHANNEL}\r\n`);
-            }, 3000);
+            }, 2000);
         }
     });
 });
 
 client.on('error', (err) => console.error('Error TCP:', err));
-client.on('close', () => console.log('Socket cerrado'));
+client.on('close', () => {
+    console.log('Socket cerrado, reconectando en 5s...');
+    identified = false;
+    setTimeout(() => client.connect(PORT_IRC, HOST), 5000);
+});
+         
