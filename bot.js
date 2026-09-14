@@ -39,9 +39,9 @@ let anuncioTimer = null;
 
 // Evento cuando se conecta al servidor
 client.addListener('registered', function(message) {
-    console.log('Syrax_ se ha conectado exitosamente al servidor de IRC.');
+    console.log('Syrax_ conectado con éxito. Entrando al canal...');
     setTimeout(() => {
-        client.join('#universo_latino');
+        client.send('JOIN', '#universo_latino');
     }, 3000);
 });
 
