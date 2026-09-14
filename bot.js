@@ -39,10 +39,12 @@ let anuncioTimer = null;
 
 // Evento cuando se conecta al servidor
 client.addListener('registered', function(message) {
-    console.log('Syrax_ conectado con éxito. Entrando al canal...');
+    console.log('Syrax_ conectado al servidor. Entrando a la sala...');
     setTimeout(() => {
-        client.send('JOIN', '#universo_latino');
-    }, 3000);
+        client.join('#universo_latino', function() {
+            console.log('¡Syrax_ ha entrado formalmente a #universo_latino!');
+        });
+    }, 4000);
 });
 
 // Evento cuando Syrax_ entra a un canal
