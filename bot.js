@@ -27,6 +27,7 @@ const client = new irc.Client('irc.chatzona.org', 'Syrax_', {
     selfSigned: true,
     certExpired: true,
     rejectUnauthorized: false,
+    servername: 'irc.chatzona.org',
     channels: [],
     autoRejoin: true,
     autoConnect: true
