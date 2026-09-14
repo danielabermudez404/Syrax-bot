@@ -13,11 +13,41 @@ app.listen(PORT, () => {
 });
 
 // Configuración de la conexión de Syrax_ a la red de IRC
-const client = new irc.Client('fresa.chatzona.org', 'Syrax_', {
+const client = new irc.Client('irc.chatzona.org', 'Syrax_', {
     userName: 'Syrax',
     realName: 'Syrax Bot de Juegos',
-    port: 6667,
-    secure: false,
+    port: 6697,
+    secure: true,
+    selfSigned: true,
+    certExpired: true,
+    channels: [],
+    autoRejoin: true,
+    autoConnect: true
+});
+
+client.on('registered', (message) => {
+    console.log('Conectado a ChatZona. Cambiando nick...');
+    client.send('NICK', 'Universo_Latino');
+
+    setTimeout(() => {
+        console.log('Identificando con NickServ...');
+        client.say('NickServ', 'IDENTIFY universo');
+    }, 2000);
+
+    setTimeout(() => {
+        console.log('Uniéndome al canal #universo_latino...');
+        client.join('#universo_latino');
+    }, 4000);
+});
+
+client.on('join', (channel, nick) => {
+    if (nick === 'Universo_Latino') {
+        console.log(`¡Éxito! El bot entró con éxito a ${channel}`);
+    }
+});
+
+client.on('error', (message) => {
+    console.error('Error IRC:', message);
 });
 
 // Variables de estado para los juegos
